@@ -8,7 +8,7 @@ BDIR=../bin
 
 CC=g++
 CFLAGS=-I$(IDIR) -std=c++17
-LIBS=-lthrift -lstdc++fs -lpthread
+LIBS=-lthrift -lstdc++fs
 
 DEPS=microbench_uniquepair.cpp \
 	$(IDIR)/buzzblog/gen/buzzblog_types.cpp \
