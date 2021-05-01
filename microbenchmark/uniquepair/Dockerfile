@@ -10,12 +10,8 @@ WORKDIR /usr/local/
 ENV host null
 ENV port null
 ENV initial_dataset_size 0
-ENV add_count 0
-ENV get_count 0
-ENV find_count 0
-ENV fetch_count 0
-ENV count_count 0
-ENV remove_count 0
+ENV max_calls 1000000
+ENV max_duration 7200
 
 # Install software dependencies.
 RUN apt-get update \
@@ -67,4 +63,4 @@ RUN cd src && make
 RUN mkdir -p /var/log/microbench_uniquepair
 
 # Run microbenchmark.
-CMD ["/bin/bash", "-c", "./bin/microbench_uniquepair --host $host --port $port --initial_dataset_size $initial_dataset_size --output_dirpath /var/log/microbench_uniquepair --add_count $add_count --get_count $get_count --find_count $find_count --fetch_count $fetch_count --count_count $count_count --remove_count $remove_count"]
+CMD ["/bin/bash", "-c", "./bin/microbench_uniquepair --host $host --port $port --initial_dataset_size $initial_dataset_size --output_dirpath /var/log/microbench_uniquepair --max_calls $max_calls --max_duration $max_duration"]
