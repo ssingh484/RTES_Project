@@ -47,7 +47,7 @@ def start_container(node_hostname, node_conf, container_name, ssh_client):
           for (param, value) in container_conf.get("options", {}).items()]) +
       " " +
       container_conf["image"])
-  sleep(16)
+  time.sleep(16)
   if container_conf["image"].startswith("postgres"):
     # Setup the database.
     subprocess.run("psql -U postgres -h %s -p %s -f %s" % (
