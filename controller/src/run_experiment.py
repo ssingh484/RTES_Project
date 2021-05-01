@@ -39,13 +39,22 @@ def update_metadata(metadata):
     metadata_file.write(yaml.dump(METADATA))
 
 
-def start_container(container_conf, ssh_client):
+def start_container(node_hostname, node_conf, container_name, ssh_client):
+  container_conf = node_conf["containers"][container_name]
   ssh_client.exec("sudo docker run " +
       " ".join(["--%s %s" % (param, value) if isinstance(value, str) else
           " ".join(["--%s %s" % (param, v) for v in value])
           for (param, value) in container_conf.get("options", {}).items()]) +
       " " +
       container_conf["image"])
+  sleep(16)
+  if container_conf["image"].startswith("postgres"):
+    # Setup the database.
+    subprocess.run("psql -U postgres -h %s -p %s -f %s" % (
+        node_hostname,
+        container_conf["options"]["publish"].split(':')[0],
+        "/opt/BuzzBlogApp/app/{service}/database/{service}_schema.sql".\
+            format(service=container_name.split('_')[0])), shell=True)
 
 
 def all_nodes(func):
@@ -240,13 +249,6 @@ def generate_backend_configuration_file(node_hostname, node_conf, ssh_client):
 
 
 @nodes_with_container(".+_database")
-def start_databases(node_hostname, node_conf, ssh_client):
-  for container_name in node_conf["containers"]:
-    if re.match(".+_database", container_name):
-      start_container(node_conf["containers"][container_name], ssh_client)
-
-
-@nodes_with_container(".+_database")
 def setup_databases(node_hostname, node_conf, ssh_client):
   for container_name in node_conf["containers"]:
     if re.match(".+_database", container_name):
@@ -256,23 +258,6 @@ def setup_databases(node_hostname, node_conf, ssh_client):
               split(':')[0],
           "/opt/BuzzBlogApp/app/{service}/database/{service}_schema.sql".\
               format(service=container_name.split('_')[0])), shell=True)
-
-
-@nodes_with_container(".+_service")
-def start_services(node_hostname, node_conf, ssh_client):
-  for container_name in node_conf["containers"]:
-    if re.match(".+_service", container_name):
-      start_container(node_conf["containers"][container_name], ssh_client)
-
-
-@nodes_with_container("apigateway")
-def start_apigateway(node_hostname, node_conf, ssh_client):
-  start_container(node_conf["containers"]["apigateway"], ssh_client)
-
-
-@nodes_with_container("loadbalancer")
-def start_loadbalancer(node_hostname, node_conf, ssh_client):
-  start_container(node_conf["containers"]["loadbalancer"], ssh_client)
 
 
 @nodes_with_monitor(".+")
@@ -289,9 +274,20 @@ def start_monitors(node_hostname, node_conf, ssh_client):
             log=monitor_conf.get("log", "/dev/null")))
 
 
-@nodes_with_container("loadgen")
-def start_loadgen(node_hostname, node_conf, ssh_client):
-  start_container(node_conf["containers"]["loadgen"], ssh_client)
+def start_containers():
+  containers = []
+  for node_hostname, node_conf in SYS_CONF.items():
+    ssh_client = SSHClient(node_hostname, node_conf["ssh"]["port"],
+        node_conf["ssh"]["username"], node_conf["ssh"]["key_filename"],
+        os.path.join(DIRNAME, "ssh",
+        "%s-%s" % (node_hostname, func.__name__)))
+    for (container_name, container_conf) in \
+        node_conf.get("containers", {}).items():
+      containers.append((container_conf["start_order"], node_hostname,
+          node_conf, container_name, ssh_client))
+  containers.sort()
+  for (_, node_hostname, node_conf, container_name, ssh_client) in containers:
+    start_container(node_hostname, node_conf, container_name, ssh_client)
 
 
 @nodes_with_monitor(".+")
@@ -340,14 +336,8 @@ def run():
   copy_workload_configuration_file()
   render_configuration_templates()
   generate_backend_configuration_file()
-  start_databases()
-  time.sleep(24)
-  setup_databases()
-  start_services()
-  start_apigateway()
-  start_loadbalancer()
   start_monitors()
-  start_loadgen()
+  start_containers()
   stop_monitors()
   fetch_monitoring_data()
   fetch_container_logs()

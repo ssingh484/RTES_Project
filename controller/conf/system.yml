@@ -9,6 +9,7 @@
   containers:
     loadgen:
       image: "rodrigoalveslima/buzzblog:loadgen_v0.1"
+      start_order: 5
       logs:
         - "/var/log/loadgen.log"
       options:
@@ -89,6 +90,7 @@
   containers:
     loadbalancer:
       image: "nginx:1.18.0"
+      start_order: 4
       options:
         name: "loadbalancer"
         publish: "8888:80"
@@ -98,6 +100,7 @@
         memory: "8g"
     apigateway:
       image: "rodrigoalveslima/buzzblog:apigateway_v0.1"
+      start_order: 3
       options:
         name: "apigateway"
         publish: "8080:81"
@@ -149,6 +152,7 @@
   containers:
     account_service:
       image: "rodrigoalveslima/buzzblog:account_v0.1"
+      start_order: 2
       options:
         name: "account_service"
         publish: "9090:9090"
@@ -165,6 +169,7 @@
         memory: "4g"
     follow_service:
       image: "rodrigoalveslima/buzzblog:follow_v0.1"
+      start_order: 2
       options:
         name: "follow_service"
         publish: "9092:9092"
@@ -181,6 +186,7 @@
         memory: "3g"
     like_service:
       image: "rodrigoalveslima/buzzblog:like_v0.1"
+      start_order: 2
       options:
         name: "like_service"
         publish: "9093:9093"
@@ -197,6 +203,7 @@
         memory: "3g"
     post_service:
       image: "rodrigoalveslima/buzzblog:post_v0.1"
+      start_order: 2
       options:
         name: "post_service"
         publish: "9094:9094"
@@ -213,6 +220,7 @@
         memory: "3g"
     uniquepair_service:
       image: "rodrigoalveslima/buzzblog:uniquepair_v0.1"
+      start_order: 2
       options:
         name: "uniquepair_service"
         publish: "9095:9095"
@@ -269,6 +277,7 @@
   containers:
     account_database:
       image: "postgres:13.1 -c max_connections=128"
+      start_order: 1
       options:
         name: "account_database"
         publish: "5433:5432"
@@ -283,6 +292,7 @@
         memory: "6g"
     post_database:
       image: "postgres:13.1 -c max_connections=128"
+      start_order: 1
       options:
         name: "post_database"
         publish: "5434:5432"
@@ -297,6 +307,7 @@
         memory: "5g"
     uniquepair_database:
       image: "postgres:13.1 -c max_connections=128"
+      start_order: 1
       options:
         name: "uniquepair_database"
         publish: "5435:5432"
