@@ -23,15 +23,15 @@
 
 // Return a connection to the Uniquepair service.
 std::unique_ptr<uniquepair_service::Client> get_client(const std::string& host,
-    const int& port) {
+    const int port) {
   return std::move(std::make_unique<uniquepair_service::Client>(host, port,
       10000));
 }
 
 
 // Add the specified number of (random) unique pairs to the domain.
-void initialize_dataset(const std::string& host, const int& port,
-    const std::string& domain, const int& size) {
+void initialize_dataset(const std::string& host, const int port,
+    const std::string& domain, const int size) {
   auto client = get_client(host, port);
   for (auto i = 1; i <= size; i++)
     client->add(domain, i, i);
@@ -50,7 +50,7 @@ class GetMicrobench {
   int id;
 
  public:
-  GetMicrobench(const std::string& host, const int& port) {
+  GetMicrobench(const std::string& host, const int port) {
     client = get_client(host, port);
     id = client->add("microbench", 0, 0).id;
   }
@@ -78,7 +78,7 @@ class AddMicrobench {
   int id;
 
  public:
-  AddMicrobench(const std::string& host, const int& port) {
+  AddMicrobench(const std::string& host, const int port) {
     client = get_client(host, port);
   }
 
@@ -105,7 +105,7 @@ class RemoveMicrobench {
   int id;
 
  public:
-  RemoveMicrobench(const std::string& host, const int& port) {
+  RemoveMicrobench(const std::string& host, const int port) {
     client = get_client(host, port);
   }
 
@@ -132,7 +132,7 @@ class FindMicrobench {
   int id;
 
  public:
-  FindMicrobench(const std::string& host, const int& port) {
+  FindMicrobench(const std::string& host, const int port) {
     client = get_client(host, port);
     id = client->add("microbench", 0, 0).id;
   }
@@ -161,7 +161,7 @@ class FetchMicrobench {
   std::vector<int> ids;
 
  public:
-  FetchMicrobench(const std::string& host, const int& port) {
+  FetchMicrobench(const std::string& host, const int port) {
     client = get_client(host, port);
     for (auto i = 1; i <= 32; i++)
       ids.push_back(client->add("fetch", i, i).id);
@@ -193,7 +193,7 @@ class CountMicrobench {
   std::vector<int> ids;
 
  public:
-  CountMicrobench(const std::string& host, const int& port) {
+  CountMicrobench(const std::string& host, const int port) {
     client = get_client(host, port);
     for (auto i = 1; i <= 1024; i++)
       ids.push_back(client->add("count", i, i).id);
