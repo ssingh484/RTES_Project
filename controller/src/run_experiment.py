@@ -281,7 +281,7 @@ def start_containers():
     ssh_client = SSHClient(node_hostname, node_conf["ssh"]["port"],
         node_conf["ssh"]["username"], node_conf["ssh"]["key_filename"],
         os.path.join(DIRNAME, "ssh",
-        "%s-%s" % (node_hostname, func.__name__)))
+        "%s-%s" % (node_hostname, "start_containers")))
     for (container_name, container_conf) in \
         node_conf.get("containers", {}).items():
       containers.append((container_conf["start_order"], node_hostname,
