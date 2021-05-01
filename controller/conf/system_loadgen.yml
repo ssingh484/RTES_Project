@@ -172,11 +172,11 @@
       start_order: 2
       options:
         name: "follow_service"
-        publish: "9092:9092"
+        publish: "9091:9091"
         volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
         env:
-          - "port=9092"
+          - "port=9091"
           - "threads=8"
           - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
           - "postgres_user=postgres"
@@ -189,11 +189,11 @@
       start_order: 2
       options:
         name: "like_service"
-        publish: "9093:9093"
+        publish: "9092:9092"
         volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
         env:
-          - "port=9093"
+          - "port=9092"
           - "threads=8"
           - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
           - "postgres_user=postgres"
@@ -206,11 +206,11 @@
       start_order: 2
       options:
         name: "post_service"
-        publish: "9094:9094"
+        publish: "9093:9093"
         volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
         env:
-          - "port=9094"
+          - "port=9093"
           - "threads=8"
           - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
           - "postgres_user=postgres"
@@ -223,11 +223,11 @@
       start_order: 2
       options:
         name: "uniquepair_service"
-        publish: "9095:9095"
+        publish: "9094:9094"
         volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
         env:
-          - "port=9095"
+          - "port=9094"
           - "threads=8"
           - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
           - "postgres_user=postgres"

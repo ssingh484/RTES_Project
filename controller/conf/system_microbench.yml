@@ -1,0 +1,56 @@
+# Copyright (C) 2020 Georgia Tech Center for Experimental Research in Computer
+# Systems
+
+{{node-1}}:
+  ssh:
+    username: "{{username}}"
+    port: 22
+    key_filename: "/home/{{username}}/.ssh/id_rsa"
+  containers:
+    uniquepair_database:
+      image: "postgres:13.1 -c max_connections=128"
+      start_order: 1
+      options:
+        name: "uniquepair_database"
+        publish: "5435:5432"
+        volume: "/var/lib/postgresql/BuzzBlogApp/uniquepair/data:/var/lib/postgresql/data"
+        detach: ""
+        env:
+          - "POSTGRES_USER=postgres"
+          - "POSTGRES_PASSWORD=postgres"
+          - "POSTGRES_DB=postgres"
+          - "POSTGRES_HOST_AUTH_METHOD=trust"
+        cpuset-cpus: "0-7"
+        memory: "16g"
+    uniquepair_service:
+      image: "rodrigoalveslima/buzzblog:uniquepair_v0.1"
+      start_order: 2
+      options:
+        name: "uniquepair_service"
+        publish: "9094:9094"
+        volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+        env:
+          - "port=9094"
+          - "threads=8"
+          - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
+          - "postgres_user=postgres"
+          - "postgres_password=postgres"
+          - "postgres_dbname=postgres"
+        cpuset-cpus: "8-15"
+        memory: "16g"
+    uniquepair_microbench:
+      image: "rodrigoalveslima/buzzblog:uniquepairmicrobench_v0.1"
+      start_order: 3
+      logs:
+        - "/var/log/microbench_uniquepair"
+      options:
+        name: "uniquepair_microbench"
+        env:
+          - "host=172.17.0.1"
+          - "port=9094"
+          - "initial_dataset_size=1024"
+          - "max_calls=10000"
+          - "max_duration=7200"
+        cpuset-cpus: "16-23"
+        memory: "16g"
