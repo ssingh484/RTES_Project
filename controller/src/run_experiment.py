@@ -219,11 +219,12 @@ def pull_docker_images(node_hostname, node_conf, ssh_client):
 
 @nodes_with_container("loadgen")
 def copy_workload_configuration_file(node_hostname, node_conf, ssh_client):
-  ssh_client.exec(
-      "sudo mkdir -p /usr/local/etc/loadgen && "
-      "echo \"{content}\" | sudo tee {filepath}".format(
-          content=yaml.dump(WL_CONF),
-          filepath="/usr/local/etc/loadgen/workload.yml"))
+  if WL_CONF:
+    ssh_client.exec(
+        "sudo mkdir -p /usr/local/etc/loadgen && "
+        "echo \"{content}\" | sudo tee {filepath}".format(
+            content=yaml.dump(WL_CONF),
+            filepath="/usr/local/etc/loadgen/workload.yml"))
 
 
 @all_nodes
@@ -352,8 +353,8 @@ def main():
       type=str, help="Experiment description")
   parser.add_argument("--system_conf", required=True, action="store",
       type=str, help="Path to the system configuration file")
-  parser.add_argument("--workload_conf", required=True, action="store",
-      type=str, help="Path to the workload configuration file")
+  parser.add_argument("--workload_conf", required=False, default="",
+      action="store", type=str, help="Path to the workload configuration file")
   parser.add_argument("--docker_hub_username", required=False, default="",
       action="store", help="Docker Hub username")
   parser.add_argument("--docker_hub_password", required=False, default="",
@@ -365,8 +366,9 @@ def main():
     SYS_CONF = yaml.load(system_conf_file, Loader=yaml.Loader)
   # Load workload configuration.
   global WL_CONF
-  with open(args.workload_conf) as workload_conf_file:
-    WL_CONF = yaml.load(workload_conf_file, Loader=yaml.Loader)
+  if args.workload_conf:
+    with open(args.workload_conf) as workload_conf_file:
+      WL_CONF = yaml.load(workload_conf_file, Loader=yaml.Loader)
   # Set Docker hub credentials.
   global DOCKER_HUB_USERNAME
   DOCKER_HUB_USERNAME = args.docker_hub_username or ""
@@ -408,9 +410,10 @@ def main():
   with open(os.path.join(DIRNAME, "conf", "system.yml"), 'w') as \
       system_conf_file_copy:
     system_conf_file_copy.write(yaml.dump(SYS_CONF))
-  with open(os.path.join(DIRNAME, "conf", "workload.yml"), 'w') as \
-      workload_conf_file_copy:
-    workload_conf_file_copy.write(yaml.dump(WL_CONF))
+  if WL_CONF:
+    with open(os.path.join(DIRNAME, "conf", "workload.yml"), 'w') as \
+        workload_conf_file_copy:
+      workload_conf_file_copy.write(yaml.dump(WL_CONF))
   # Run experiment workflow.
   run()
   # Update experiment metadata.
