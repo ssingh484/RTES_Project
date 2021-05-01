@@ -37,6 +37,7 @@ To setup the `controller` in `node-0`:
 ```
 chmod +x tutorial_setup.sh
 ./tutorial_setup.sh \
+    --type loadgen \
     --username [your cloudlab username] \
     --private_ssh_key_path [path to your private ssh key] \
     --node_0 [node-0 hostname] \
