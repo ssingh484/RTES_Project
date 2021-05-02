@@ -1,0 +1,53 @@
+pc752.emulab.net:
+  containers:
+    uniquepair_database:
+      image: postgres:13.1 -c max_connections=128
+      options:
+        cpuset-cpus: 0-7
+        detach: ''
+        env:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=postgres
+        - POSTGRES_HOST_AUTH_METHOD=trust
+        memory: 16g
+        name: uniquepair_database
+        publish: 5435:5432
+        volume: /var/lib/postgresql/BuzzBlogApp/uniquepair/data:/var/lib/postgresql/data
+      start_order: 1
+    uniquepair_microbench:
+      image: rodrigoalveslima/buzzblog:uniquepairmicrobench_v0.1
+      logs:
+      - /var/log/microbench_uniquepair
+      options:
+        cpuset-cpus: 16-23
+        env:
+        - host=172.17.0.1
+        - port=9094
+        - initial_dataset_size=1024
+        - max_calls=10000
+        - max_duration=7200
+        memory: 16g
+        name: uniquepair_microbench
+      start_order: 3
+    uniquepair_service:
+      image: rodrigoalveslima/buzzblog:uniquepair_v0.1
+      options:
+        cpuset-cpus: 8-15
+        detach: ''
+        env:
+        - port=9094
+        - threads=8
+        - backend_filepath=/etc/opt/BuzzBlogApp/backend.yml
+        - postgres_user=postgres
+        - postgres_password=postgres
+        - postgres_dbname=postgres
+        memory: 16g
+        name: uniquepair_service
+        publish: 9094:9094
+        volume: /etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp
+      start_order: 2
+  ssh:
+    key_filename: /home/ral/.ssh/id_rsa
+    port: 22
+    username: ral
