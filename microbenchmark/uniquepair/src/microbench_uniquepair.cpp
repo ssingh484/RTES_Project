@@ -29,7 +29,7 @@ std::unique_ptr<uniquepair_service::Client> get_client(const std::string& host,
 }
 
 
-// Add the specified number of (random) unique pairs to the domain.
+// Add the specified number of unique pairs to the domain.
 void initialize_dataset(const std::string& host, const int port,
     const std::string& domain, const int size) {
   auto client = get_client(host, port);
