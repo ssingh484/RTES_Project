@@ -107,7 +107,8 @@ class BuzzBlogSession(ATLoad.Session):
       self._request("delete", "/like/%s" % like["id"])
 
   def retrieve_recent_posts(self):
-    r = self._request("get", "/post")
+    r = self._request("get", "/post",
+        params={"limit": 32, "offset": 0})
     if r.status_code == 200 and r.json():
       self._other_post = random.choice(r.json())
       self._other_account = random.choice(r.json())["author"]
@@ -118,7 +119,8 @@ class BuzzBlogSession(ATLoad.Session):
 
   def retrieve_post_likes(self):
     if self._other_post:
-      self._request("get", "/like", params={"post_id": self._other_post["id"]})
+      self._request("get", "/like", params={"post_id": self._other_post["id"],
+          "limit": 32, "offset": 0})
 
   def retrieve_account(self):
     if self._other_account:
@@ -127,28 +129,32 @@ class BuzzBlogSession(ATLoad.Session):
   def retrieve_account_posts(self):
     if self._other_account:
       r = self._request("get", "/post",
-          params={"author_id": self._other_account["id"]})
+          params={"author_id": self._other_account["id"], "limit": 32,
+              "offset": 0})
       if r.status_code == 200:
         self._other_post = random.choice(r.json())
 
   def retrieve_account_followers(self):
     if self._other_account:
       r = self._request("get", "/follow",
-          params={"followee_id": self._other_account["id"]})
+          params={"followee_id": self._other_account["id"], "limit": 32,
+              "offset": 0})
       if r.status_code == 200 and r.json():
         self._other_account = random.choice(r.json())["follower"]
 
   def retrieve_account_followees(self):
     if self._other_account:
       r = self._request("get", "/follow",
-          params={"follower_id": self._other_account["id"]})
+          params={"follower_id": self._other_account["id"], "limit": 32,
+              "offset": 0})
       if r.status_code == 200 and r.json():
         self._other_account = random.choice(r.json())["followee"]
 
   def retrieve_account_likes(self):
     if self._other_account:
       self._request("get", "/like",
-          params={"account_id": self._other_account["id"]})
+          params={"account_id": self._other_account["id"], "limit": 32,
+              "offset": 0})
 
 
 if __name__ == "__main__":
