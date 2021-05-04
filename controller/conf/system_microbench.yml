@@ -7,6 +7,32 @@
     port: 22
     key_filename: "/home/{{username}}/.ssh/id_rsa"
   containers:
+    account_database:
+      image: "postgres:13.1 -c max_connections=128"
+      start_order: 1
+      options:
+        name: "account_database"
+        publish: "5433:5432"
+        volume: "/var/lib/postgresql/BuzzBlogApp/account/data:/var/lib/postgresql/data"
+        detach: ""
+        env:
+          - "POSTGRES_USER=postgres"
+          - "POSTGRES_PASSWORD=postgres"
+          - "POSTGRES_DB=postgres"
+          - "POSTGRES_HOST_AUTH_METHOD=trust"
+    post_database:
+      image: "postgres:13.1 -c max_connections=128"
+      start_order: 1
+      options:
+        name: "post_database"
+        publish: "5434:5432"
+        volume: "/var/lib/postgresql/BuzzBlogApp/post/data:/var/lib/postgresql/data"
+        detach: ""
+        env:
+          - "POSTGRES_USER=postgres"
+          - "POSTGRES_PASSWORD=postgres"
+          - "POSTGRES_DB=postgres"
+          - "POSTGRES_HOST_AUTH_METHOD=trust"
     uniquepair_database:
       image: "postgres:13.1 -c max_connections=128"
       start_order: 1
@@ -20,8 +46,66 @@
           - "POSTGRES_PASSWORD=postgres"
           - "POSTGRES_DB=postgres"
           - "POSTGRES_HOST_AUTH_METHOD=trust"
-        cpuset-cpus: "0-7"
-        memory: "16g"
+    account_service:
+      image: "rodrigoalveslima/buzzblog:account_v0.1"
+      start_order: 2
+      options:
+        name: "account_service"
+        publish: "9090:9090"
+        volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+        env:
+          - "port=9090"
+          - "threads=1"
+          - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
+          - "postgres_user=postgres"
+          - "postgres_password=postgres"
+          - "postgres_dbname=postgres"
+    follow_service:
+      image: "rodrigoalveslima/buzzblog:follow_v0.1"
+      start_order: 2
+      options:
+        name: "follow_service"
+        publish: "9091:9091"
+        volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+        env:
+          - "port=9091"
+          - "threads=1"
+          - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
+          - "postgres_user=postgres"
+          - "postgres_password=postgres"
+          - "postgres_dbname=postgres"
+    like_service:
+      image: "rodrigoalveslima/buzzblog:like_v0.1"
+      start_order: 2
+      options:
+        name: "like_service"
+        publish: "9092:9092"
+        volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+        env:
+          - "port=9092"
+          - "threads=1"
+          - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
+          - "postgres_user=postgres"
+          - "postgres_password=postgres"
+          - "postgres_dbname=postgres"
+    post_service:
+      image: "rodrigoalveslima/buzzblog:post_v0.1"
+      start_order: 2
+      options:
+        name: "post_service"
+        publish: "9093:9093"
+        volume: "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+        env:
+          - "port=9093"
+          - "threads=1"
+          - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
+          - "postgres_user=postgres"
+          - "postgres_password=postgres"
+          - "postgres_dbname=postgres"
     uniquepair_service:
       image: "rodrigoalveslima/buzzblog:uniquepair_v0.1"
       start_order: 2
@@ -32,13 +116,11 @@
         detach: ""
         env:
           - "port=9094"
-          - "threads=8"
+          - "threads=1"
           - "backend_filepath=/etc/opt/BuzzBlogApp/backend.yml"
           - "postgres_user=postgres"
           - "postgres_password=postgres"
           - "postgres_dbname=postgres"
-        cpuset-cpus: "8-15"
-        memory: "16g"
     uniquepair_microbench:
       image: "rodrigoalveslima/buzzblog:uniquepairmicrobench_v0.1"
       start_order: 3
@@ -50,7 +132,37 @@
           - "host=172.17.0.1"
           - "port=9094"
           - "initial_dataset_size=1024"
-          - "max_calls=10000"
-          - "max_duration=7200"
-        cpuset-cpus: "16-23"
-        memory: "16g"
+          - "max_calls=100000"
+          - "max_duration=3600"
+#    follow_microbench:
+#      image: "rodrigoalveslima/buzzblog:followmicrobench_v0.1"
+#      start_order: 3
+#      logs:
+#        - "/var/log/microbench_follow"
+#      options:
+#        name: "follow_microbench"
+#        env:
+#          - "account_host=172.17.0.1"
+#          - "account_port=9090"
+#          - "follow_host=172.17.0.1"
+#          - "follow_port=9091"
+#          - "initial_dataset_size=1024"
+#          - "max_calls=100000"
+#          - "max_duration=3600"
+#    like_microbench:
+#      image: "rodrigoalveslima/buzzblog:likemicrobench_v0.1"
+#      start_order: 3
+#      logs:
+#        - "/var/log/microbench_like"
+#      options:
+#        name: "like_microbench"
+#        env:
+#          - "account_host=172.17.0.1"
+#          - "account_port=9090"
+#          - "post_host=172.17.0.1"
+#          - "post_port=9093"
+#          - "like_host=172.17.0.1"
+#          - "like_port=9092"
+#          - "initial_dataset_size=1024"
+#          - "max_calls=100000"
+#          - "max_duration=3600"
