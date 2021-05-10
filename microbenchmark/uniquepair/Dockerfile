@@ -44,11 +44,11 @@ RUN cd /tmp \
   && unzip v2.2.1.zip \
   && cp cxxopts-2.2.1/include/cxxopts.hpp /usr/local/include
 
-# Copy cppbench 0.1.1
+# Copy cppbench 0.1.2
 RUN cd /tmp \
-  && wget https://github.com/rodrigoalveslima/cppbench/archive/refs/tags/v0.1.1.zip \
-  && unzip v0.1.1.zip \
-  && cp cppbench-0.1.1/include/cppbench.h /usr/local/include
+  && wget https://github.com/rodrigoalveslima/cppbench/archive/refs/tags/v0.1.2.zip \
+  && unzip v0.1.2.zip \
+  && cp cppbench-0.1.2/include/cppbench.h /usr/local/include
 
 # Copy service client libraries.
 COPY include include
