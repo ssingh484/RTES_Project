@@ -283,8 +283,8 @@ public:
 
 int main(int argc, char** argv) {
   // Define command-line parameters.
-  cxxopts::Options options("microbench_uniquepair_baseline",
-      "Uniquepair microbenchmark baseline");
+  cxxopts::Options options("uniquepair_baseline_server",
+      "Uniquepair baseline server");
   options.add_options()
       ("output_dirpath", "Path to the output directory",
           cxxopts::value<std::string>())

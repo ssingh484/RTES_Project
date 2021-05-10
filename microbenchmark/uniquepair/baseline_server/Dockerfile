@@ -57,7 +57,7 @@ COPY src src
 RUN cd src && make
 
 # Create directory for results.
-RUN mkdir -p /var/log/microbench_uniquepair
+RUN mkdir -p /var/log/uniquepair_baseline_server
 
 # Run microbenchmark.
-CMD ["/bin/bash", "-c", "./bin/microbench_uniquepair --output_dirpath /var/log/microbench_uniquepair --max_calls $max_calls --max_duration $max_duration"]
+CMD ["/bin/bash", "-c", "./bin/uniquepair_baseline_server --output_dirpath /var/log/uniquepair_baseline_server --max_calls $max_calls --max_duration $max_duration"]
