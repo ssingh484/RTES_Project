@@ -1,9 +1,6 @@
 // Copyright (C) 2020 Georgia Tech Center for Experimental Research in Computer
 // Systems
 
-#include <stdlib.h>
-#include <time.h>
-
 #include <filesystem>
 #include <functional>
 #include <memory>
@@ -248,9 +245,6 @@ int main(int argc, char** argv) {
   auto output_dirpath = result["output_dirpath"].as<std::string>();
   auto max_calls = result["max_calls"].as<int>();
   auto max_duration = result["max_duration"].as<int>();
-
-  // Initialize random seed.
-  srand(time(NULL));
 
   // Initialize dataset.
   initialize_dataset(host, port, "microbench", initial_dataset_size);
