@@ -5,17 +5,17 @@
 #include <string>
 
 #include <cxxopts.hpp>
-/******************************** COMMENTED OUT ********************************
-#include <pqxx/pqxx>
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/server/TThreadedServer.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <thrift/transport/TServerSocket.h>
 
+#include <buzzblog/gen/TUniquepairService.h>
+
+/******************************** COMMENTED OUT ********************************
+#include <pqxx/pqxx>
 #include <buzzblog/base_server.h>
 *******************************************************************************/
-
-#include <buzzblog/gen/TUniquepairService.h>
 
 /********************************* ADDED BEGIN ********************************/
 #include <filesystem>
@@ -23,22 +23,19 @@
 #include <memory>
 #include <vector>
 #include <utility>
-
 #include <cppbench.h>
 /********************************** ADDED END *********************************/
 
 
-/******************************** COMMENTED OUT ********************************
 using namespace apache::thrift;
 using namespace apache::thrift::protocol;
 using namespace apache::thrift::transport;
 using namespace apache::thrift::server;
-*******************************************************************************/
 
 using namespace gen;
 
 
-class TUniquepairServiceHandler {
+class TUniquepairServiceHandler : public TUniquepairServiceIf {
 private:
   std::string build_where_clause(const TUniquepairQuery& query) {
     std::ostringstream where_clause;
@@ -286,88 +283,109 @@ int main(int argc, char** argv) {
   cxxopts::Options options("uniquepair_baseline_server",
       "Uniquepair baseline server");
   options.add_options()
+      ("server", "Server flag",
+          cxxopts::value<bool>()->default_value("true"))
+      ("host", "", cxxopts::value<std::string>()->default_value("0.0.0.0"))
+      ("port", "", cxxopts::value<int>()->default_value("9094"))
       ("output_dirpath", "Path to the output directory",
-          cxxopts::value<std::string>())
+          cxxopts::value<std::string>()->default_value(""))
       ("max_calls", "Max number of calls to a benchmarked function",
-          cxxopts::value<int>()->default_value("1000000"))
+          cxxopts::value<int>()->default_value("0"))
       ("max_duration", "Max duration of a benchmark in seconds",
-          cxxopts::value<int>()->default_value("600"));
+          cxxopts::value<int>()->default_value("0"));
   // Parse command-line arguments.
   auto result = options.parse(argc, argv);
+  auto server_flag = result["server"].as<bool>();
+  auto host = result["host"].as<std::string>();
+  auto port = result["port"].as<int>();
   auto output_dirpath = result["output_dirpath"].as<std::string>();
   auto max_calls = result["max_calls"].as<int>();
   auto max_duration = result["max_duration"].as<int>();
 
-  // Run 'get' microbenchmark.
-  {
-    auto output_filepath = std::filesystem::path(output_dirpath) /
-        std::filesystem::path("get.csv");
-    auto microbench = TUniquepairServiceHandler();
-    TUniquepair _return;
-    run_benchmark(
-        std::bind(&TUniquepairServiceHandler::get, &microbench, _return, 1),
-        nullptr, nullptr,
-        max_calls, max_duration, output_filepath.string());
+  if (!output_dirpath.empty() && max_calls > 0 && max_duration > 0) {
+    // Run 'get' microbenchmark.
+    {
+      auto output_filepath = std::filesystem::path(output_dirpath) /
+          std::filesystem::path("get.csv");
+      auto microbench = TUniquepairServiceHandler();
+      TUniquepair _return;
+      run_benchmark(
+          std::bind(&TUniquepairServiceHandler::get, &microbench, _return, 1),
+          nullptr, nullptr,
+          max_calls, max_duration, output_filepath.string());
+    }
+    // Run 'add' microbenchmark.
+    {
+      auto output_filepath = std::filesystem::path(output_dirpath) /
+          std::filesystem::path("add.csv");
+      auto microbench = TUniquepairServiceHandler();
+      TUniquepair _return;
+      run_benchmark(
+          std::bind(&TUniquepairServiceHandler::add, &microbench, _return,
+              "domain", 1, 2),
+          nullptr, nullptr,
+          max_calls, max_duration, output_filepath.string());
+    }
+    // Run 'remove' microbenchmark.
+    {
+      auto output_filepath = std::filesystem::path(output_dirpath) /
+          std::filesystem::path("remove.csv");
+      auto microbench = TUniquepairServiceHandler();
+      run_benchmark(
+          std::bind(&TUniquepairServiceHandler::remove, &microbench, 1),
+          nullptr, nullptr,
+          max_calls, max_duration, output_filepath.string());
+    }
+    // Run 'find' microbenchmark.
+    {
+      auto output_filepath = std::filesystem::path(output_dirpath) /
+          std::filesystem::path("find.csv");
+      auto microbench = TUniquepairServiceHandler();
+      TUniquepair _return;
+      run_benchmark(
+          std::bind(&TUniquepairServiceHandler::find, &microbench, _return,
+              "domain", 1, 2),
+          nullptr, nullptr,
+          max_calls, max_duration, output_filepath.string());
+    }
+    // Run 'fetch' microbenchmark.
+    {
+      auto output_filepath = std::filesystem::path(output_dirpath) /
+          std::filesystem::path("fetch.csv");
+      auto microbench = TUniquepairServiceHandler();
+      std::vector<TUniquepair> _return;
+      TUniquepairQuery query;
+      query.__set_domain("domain");
+      run_benchmark(
+          std::bind(&TUniquepairServiceHandler::fetch, &microbench, _return,
+              query, 32, 0),
+          nullptr, nullptr,
+          max_calls, max_duration, output_filepath.string());
+    }
+    // Run 'count' microbenchmark.
+    {
+      auto output_filepath = std::filesystem::path(output_dirpath) /
+          std::filesystem::path("count.csv");
+      auto microbench = TUniquepairServiceHandler();
+      TUniquepairQuery query;
+      query.__set_domain("domain");
+      run_benchmark(
+          std::bind(&TUniquepairServiceHandler::count, &microbench, query),
+          nullptr, nullptr,
+          max_calls, max_duration, output_filepath.string());
+    }
   }
-  // Run 'add' microbenchmark.
-  {
-    auto output_filepath = std::filesystem::path(output_dirpath) /
-        std::filesystem::path("add.csv");
-    auto microbench = TUniquepairServiceHandler();
-    TUniquepair _return;
-    run_benchmark(
-        std::bind(&TUniquepairServiceHandler::add, &microbench, _return,
-            "domain", 1, 2),
-        nullptr, nullptr,
-        max_calls, max_duration, output_filepath.string());
-  }
-  // Run 'remove' microbenchmark.
-  {
-    auto output_filepath = std::filesystem::path(output_dirpath) /
-        std::filesystem::path("remove.csv");
-    auto microbench = TUniquepairServiceHandler();
-    run_benchmark(
-        std::bind(&TUniquepairServiceHandler::remove, &microbench, 1),
-        nullptr, nullptr,
-        max_calls, max_duration, output_filepath.string());
-  }
-  // Run 'find' microbenchmark.
-  {
-    auto output_filepath = std::filesystem::path(output_dirpath) /
-        std::filesystem::path("find.csv");
-    auto microbench = TUniquepairServiceHandler();
-    TUniquepair _return;
-    run_benchmark(
-        std::bind(&TUniquepairServiceHandler::find, &microbench, _return,
-            "domain", 1, 2),
-        nullptr, nullptr,
-        max_calls, max_duration, output_filepath.string());
-  }
-  // Run 'fetch' microbenchmark.
-  {
-    auto output_filepath = std::filesystem::path(output_dirpath) /
-        std::filesystem::path("fetch.csv");
-    auto microbench = TUniquepairServiceHandler();
-    std::vector<TUniquepair> _return;
-    TUniquepairQuery query;
-    query.__set_domain("domain");
-    run_benchmark(
-        std::bind(&TUniquepairServiceHandler::fetch, &microbench, _return,
-            query, 32, 0),
-        nullptr, nullptr,
-        max_calls, max_duration, output_filepath.string());
-  }
-  // Run 'count' microbenchmark.
-  {
-    auto output_filepath = std::filesystem::path(output_dirpath) /
-        std::filesystem::path("count.csv");
-    auto microbench = TUniquepairServiceHandler();
-    TUniquepairQuery query;
-    query.__set_domain("domain");
-    run_benchmark(
-        std::bind(&TUniquepairServiceHandler::count, &microbench, query),
-        nullptr, nullptr,
-        max_calls, max_duration, output_filepath.string());
+  if (server_flag) {
+    // Create server.
+    TThreadedServer server(
+        std::make_shared<TUniquepairServiceProcessor>(
+            std::make_shared<TUniquepairServiceHandler>()),
+        std::make_shared<TServerSocket>(host, port),
+        std::make_shared<TBufferedTransportFactory>(),
+        std::make_shared<TBinaryProtocolFactory>());
+    server.setConcurrentClientLimit(1);
+    // Serve requests.
+    server.serve();
   }
 
   return 0;
