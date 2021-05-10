@@ -269,7 +269,6 @@ int main(int argc, char** argv) {
         std::bind(&AddMicrobench::tear_down, &microbench),
         max_calls, max_duration, output_filepath.string());
   }
-
   // Run 'remove' microbenchmark.
   {
     auto output_filepath = std::filesystem::path(output_dirpath) /
@@ -280,7 +279,6 @@ int main(int argc, char** argv) {
         std::bind(&RemoveMicrobench::tear_down, &microbench),
         max_calls, max_duration, output_filepath.string());
   }
-
   // Run 'find' microbenchmark.
   {
     auto output_filepath = std::filesystem::path(output_dirpath) /
