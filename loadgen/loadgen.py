@@ -30,6 +30,7 @@ class BuzzBlogSession(ATLoad.Session):
   def _request(self, method, path, params=None, json=None):
     auth = HTTPBasicAuth(self._my_account["username"], self._password) \
         if self._my_account is not None else None
+    params.update({"request_id": self._random_string(8)})
     start_time = datetime.datetime.now()
     r = getattr(requests, method)(self._url_prefix + path, auth=auth,
         params=params, json=json)
