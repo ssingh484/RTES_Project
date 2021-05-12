@@ -9,8 +9,8 @@ WORKDIR /usr/local/
 # Declare environment variables.
 ENV host null
 ENV port null
-ENV initial_dataset_size 0
-ENV max_calls 1000000
+ENV initial_dataset_size 1024
+ENV max_calls 100000
 ENV max_duration 7200
 
 # Install software dependencies.

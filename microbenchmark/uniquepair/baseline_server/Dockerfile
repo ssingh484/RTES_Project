@@ -7,8 +7,11 @@ MAINTAINER ral@gatech.edu
 WORKDIR /usr/local/
 
 # Declare environment variables.
-ENV max_calls 1000000
-ENV max_duration 7200
+ENV server true
+ENV host 0.0.0.0
+ENV port 9094
+ENV max_calls 0
+ENV max_duration 0
 
 # Install software dependencies.
 RUN apt-get update \
@@ -60,4 +63,4 @@ RUN cd src && make
 RUN mkdir -p /var/log/uniquepair_baseline_server
 
 # Run microbenchmark.
-CMD ["/bin/bash", "-c", "./bin/uniquepair_baseline_server --output_dirpath /var/log/uniquepair_baseline_server --max_calls $max_calls --max_duration $max_duration"]
+CMD ["/bin/bash", "-c", "./bin/uniquepair_baseline_server --server $server --host $host --port $port --output_dirpath /var/log/uniquepair_baseline_server --max_calls $max_calls --max_duration $max_duration"]
