@@ -49,36 +49,11 @@
           # https://uwsgi-docs.readthedocs.io/en/latest/Cheaper.html
           cheaper-busyness-verbose: "true"
           # min workers
-          cheaper: 2
+          cheaper: 1
           # initial workers
-          cheaper-initial: 4
+          cheaper-initial: 1
           # max workers
-          workers: 16
-          # cheaper algorithm
-          cheaper-algo: "spare"
-          # time window to track workers
-          cheaper-overload: 3
-          # no. of workers spawned at a time
-          cheaper-step: 1
-          # max busyness allowed
-          cheaper-busyness-max: 50
-          # min busyness allowed
-          cheaper-busyness-min: 25
-          # no. of idle cycles needed before stopping a worker
-          cheaper-busyness-multiplier: 20
-          # if a worker is spawned in less time than needed to cheap a worker,
-          # increment the multiplier by this value
-          cheaper-busyness-penalty: 1
-          # if the listen queue length is greater than this value, emergency
-          # workers are spawned (checked every second)
-          cheaper-busyness-backlog-alert: 33
-          # no. of idle cycles needed before stopping an emergency worker
-          cheaper-busyness-backlog-multiplier: 3
-          # no. of emergency workers spawned at a time
-          busyness-backlog-step: 1
-          # if the listen queue length > 0 for this amount of seconds, emergency
-          # workers are spawned
-          busyness-backlog-nonzero: 60
+          workers: 1
   containers:
     apigateway:
       image: "rodrigoalveslima/buzzblog:apigateway_v0.1"
