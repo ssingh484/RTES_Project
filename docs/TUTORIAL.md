@@ -110,7 +110,7 @@ sudo docker run \
     --volume $(pwd):/usr/local/etc/BuzzBlogBenchmark \
     --volume $(pwd):/var/log/BuzzBlogBenchmark \
     --volume $(pwd)/.ssh:/home/$(whoami)/.ssh \
-    rodrigoalveslima/buzzblog:benchmarkcontroller_v0.1
+    rodrigoalveslima/buzzblog:benchmarkcontroller_latest
 ```
 
 This experiment will take approximately 30 minutes to finish. The results will
