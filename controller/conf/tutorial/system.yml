@@ -18,7 +18,7 @@
           - "/usr/local/etc/loadgen:/usr/local/etc/loadgen"
         env:
           - "hostname={{apigateway_node}}"
-          - "port=8080"
+          - "port=80"
   monitors:
     collectl:
       dirpath: "/tmp/collectl"
@@ -40,6 +40,17 @@
     net.ipv4.ip_local_port_range: "32768 65535"
     net.core.somaxconn: 128
   templates:
+    nginx.conf:
+      output: "/etc/nginx/nginx.conf"
+      params:
+        port: 80
+        worker_processes: 8
+        worker_connections: 512
+        apigateway_servers:
+          - "172.17.0.1:8080"
+          - "172.17.0.1:8081"
+          - "172.17.0.1:8082"
+          - "172.17.0.1:8083"
     uwsgi.ini:
       output: "/etc/uwsgi/uwsgi.ini"
       params:
@@ -55,14 +66,58 @@
           # max workers
           workers: 1
   containers:
-    apigateway:
+    loadbalancer:
+      image: "nginx:1.18.0"
+      start_order: 3
+      options:
+        name: "loadbalancer"
+        publish: "80:80"
+        volume: "/etc/nginx:/etc/nginx"
+        detach: ""
+    apigateway1:
       image: "rodrigoalveslima/buzzblog:apigateway_latest"
       start_order: 3
       logs:
         - "/tmp/calls.log"
       options:
-        name: "apigateway"
+        name: "apigateway1"
         publish: "8080:81"
+        volume:
+          - "/etc/uwsgi:/etc/uwsgi"
+          - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+    apigateway2:
+      image: "rodrigoalveslima/buzzblog:apigateway_latest"
+      start_order: 3
+      logs:
+        - "/tmp/calls.log"
+      options:
+        name: "apigateway2"
+        publish: "8081:81"
+        volume:
+          - "/etc/uwsgi:/etc/uwsgi"
+          - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+    apigateway3:
+      image: "rodrigoalveslima/buzzblog:apigateway_latest"
+      start_order: 3
+      logs:
+        - "/tmp/calls.log"
+      options:
+        name: "apigateway3"
+        publish: "8082:81"
+        volume:
+          - "/etc/uwsgi:/etc/uwsgi"
+          - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
+        detach: ""
+    apigateway4:
+      image: "rodrigoalveslima/buzzblog:apigateway_latest"
+      start_order: 3
+      logs:
+        - "/tmp/calls.log"
+      options:
+        name: "apigateway4"
+        publish: "8083:81"
         volume:
           - "/etc/uwsgi:/etc/uwsgi"
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
