@@ -18,7 +18,7 @@
           - "/usr/local/etc/loadgen:/usr/local/etc/loadgen"
         env:
           - "hostname={{apigateway_node}}"
-          - "port=80"
+          - "port=8888"
   monitors:
     collectl:
       dirpath: "/tmp/collectl"
@@ -71,7 +71,7 @@
       start_order: 3
       options:
         name: "loadbalancer"
-        publish: "80:80"
+        publish: "8888:80"
         volume: "/etc/nginx:/etc/nginx"
         detach: ""
     apigateway1:
