@@ -60,11 +60,11 @@
           # https://uwsgi-docs.readthedocs.io/en/latest/Cheaper.html
           cheaper-busyness-verbose: "true"
           # min workers
-          cheaper: 0
+          cheaper: 1
           # initial workers
-          cheaper-initial: 1
+          cheaper-initial: 2
           # max workers
-          workers: 1
+          workers: 4
   containers:
     loadbalancer:
       image: "nginx:1.18.0"
@@ -78,7 +78,7 @@
       image: "rodrigoalveslima/buzzblog:apigateway_latest"
       start_order: 3
       logs:
-        - "/tmp/calls.log"
+        - "/tmp/logger"
       options:
         name: "apigateway1"
         publish: "8080:81"
@@ -90,7 +90,7 @@
       image: "rodrigoalveslima/buzzblog:apigateway_latest"
       start_order: 3
       logs:
-        - "/tmp/calls.log"
+        - "/tmp/logger"
       options:
         name: "apigateway2"
         publish: "8081:81"
@@ -102,7 +102,7 @@
       image: "rodrigoalveslima/buzzblog:apigateway_latest"
       start_order: 3
       logs:
-        - "/tmp/calls.log"
+        - "/tmp/logger"
       options:
         name: "apigateway3"
         publish: "8082:81"
@@ -114,7 +114,7 @@
       image: "rodrigoalveslima/buzzblog:apigateway_latest"
       start_order: 3
       logs:
-        - "/tmp/calls.log"
+        - "/tmp/logger"
       options:
         name: "apigateway4"
         publish: "8083:81"
