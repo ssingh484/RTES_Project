@@ -51,20 +51,11 @@
           - "172.17.0.1:8081"
           - "172.17.0.1:8082"
           - "172.17.0.1:8083"
-    uwsgi.ini:
-      output: "/etc/uwsgi/uwsgi.ini"
+    gunicorn.conf.py:
+      output: "/etc/gunicorn/gunicorn.conf.py"
       params:
-        params:
-          http-socket: "0.0.0.0:81"
-          # uWSGI cheaper subsystem docs:
-          # https://uwsgi-docs.readthedocs.io/en/latest/Cheaper.html
-          cheaper-busyness-verbose: "true"
-          # min workers
-          cheaper: 1
-          # initial workers
-          cheaper-initial: 2
-          # max workers
-          workers: 4
+        bind: "0.0.0.0:81"
+        workers: 4
   containers:
     loadbalancer:
       image: "nginx:1.18.0"
@@ -83,7 +74,7 @@
         name: "apigateway1"
         publish: "8080:81"
         volume:
-          - "/etc/uwsgi:/etc/uwsgi"
+          - "/etc/gunicorn:/etc/gunicorn"
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
     apigateway2:
@@ -95,7 +86,7 @@
         name: "apigateway2"
         publish: "8081:81"
         volume:
-          - "/etc/uwsgi:/etc/uwsgi"
+          - "/etc/gunicorn:/etc/gunicorn"
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
     apigateway3:
@@ -107,7 +98,7 @@
         name: "apigateway3"
         publish: "8082:81"
         volume:
-          - "/etc/uwsgi:/etc/uwsgi"
+          - "/etc/gunicorn:/etc/gunicorn"
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
     apigateway4:
@@ -119,7 +110,7 @@
         name: "apigateway4"
         publish: "8083:81"
         volume:
-          - "/etc/uwsgi:/etc/uwsgi"
+          - "/etc/gunicorn:/etc/gunicorn"
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
   monitors:
