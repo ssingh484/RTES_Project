@@ -236,7 +236,7 @@ def render_configuration_templates(node_hostname, node_conf, ssh_client):
       ssh_client.exec("sudo mkdir -p %s" % os.path.split(template_conf["output"])[0])
     ssh_client.exec("echo \"{content}\" | sudo tee {filepath}".format(
         content=env.get_template(template_name).\
-            render(**template_conf["params"]),
+            render(**template_conf["params"]).replace('"', '\\"'),
         filepath=template_conf["output"]))
 
 
