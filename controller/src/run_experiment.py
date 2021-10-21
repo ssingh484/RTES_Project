@@ -301,9 +301,9 @@ def stop_monitors(node_hostname, node_conf, ssh_client):
 @nodes_with_monitor(".+")
 def fetch_monitoring_data(node_hostname, node_conf, ssh_client):
   for monitor_name, monitor_conf in node_conf["monitors"].items():
-    ssh_client.exec("tar -C {dirpath} -czf /tmp/{monitor_name}.tar.gz .".format(
+    ssh_client.exec("tar -C {dirpath} -czf '/tmp/{monitor_name}.tar.gz' .".format(
         monitor_name=monitor_name, dirpath=monitor_conf["dirpath"]))
-    ssh_client.copy("/tmp/{monitor_name}.tar.gz".format(
+    ssh_client.copy("'/tmp/{monitor_name}.tar.gz'".format(
         monitor_name=monitor_name),
         os.path.join(DIRNAME, "logs", node_hostname))
 
