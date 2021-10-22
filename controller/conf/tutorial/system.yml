@@ -35,7 +35,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{apigateway_node}}:
   ssh:
@@ -156,7 +156,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{account_service_node}}:
   ssh:
@@ -221,7 +221,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{account_database_node}}:
   ssh:
@@ -282,7 +282,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{follow_service_node}}:
   ssh:
@@ -347,7 +347,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{like_service_node}}:
   ssh:
@@ -412,7 +412,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{post_service_node}}:
   ssh:
@@ -477,7 +477,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{post_database_node}}:
   ssh:
@@ -538,7 +538,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{uniquepair_service_node}}:
   ssh:
@@ -603,7 +603,7 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
 {{uniquepair_database_node}}:
   ssh:
@@ -664,5 +664,5 @@
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
-        freq=: "\bmax"
+        freq=: "\b20"
         g: "\b\b\bg"
