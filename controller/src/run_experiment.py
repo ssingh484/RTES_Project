@@ -186,10 +186,10 @@ def install_collectl(node_hostname, node_conf, ssh_client):
 @nodes_with_monitor("perf record")
 def install_perf(node_hostname, node_conf, ssh_client):
   ssh_client.exec(
-      "sudo apt-get update &&"
-      "sudo apt-get install -y linux-tools-generic &&"
-      "sudo apt-get install -y linux-cloud-tools-generic &&"
-      "sudo apt-get install -y linux-tools-5.4.0-88-generic &&"
+      "sudo apt-get update && "
+      "sudo apt-get install -y linux-tools-generic && "
+      "sudo apt-get install -y linux-cloud-tools-generic && "
+      "sudo apt-get install -y linux-tools-5.4.0-88-generic && "
       "sudo apt-get install -y linux-cloud-tools-5.4.0-88-generic")
 
 
@@ -274,14 +274,24 @@ def setup_databases(node_hostname, node_conf, ssh_client):
 def start_monitors(node_hostname, node_conf, ssh_client):
   for monitor_name, monitor_conf in node_conf["monitors"].items():
     ssh_client.exec("mkdir -p %s" % monitor_conf["dirpath"])
-    ssh_client.exec("sudo nohup nice -n %s " %
-        monitor_conf.get("niceness", 19) +
-        "stdbuf -oL -eL " +
-        monitor_conf.get("command", monitor_name) + " " +
-        " ".join(["--%s %s" % (param, value) for (param, value) in
-            monitor_conf.get("options", {}).items()]) + " " +
-        "> {log} 2>&1 < /dev/null &".format(
-            log=monitor_conf.get("log", "/dev/null")))
+    if "perf" in monitor_name:
+        ssh_client.exec("sudo touch perfRan && sudo nohup nice -n %s " %
+            monitor_conf.get("niceness", 19) +
+            "stdbuf -oL -eL " +
+            monitor_conf.get("command", monitor_name) + " " +
+            " ".join(["--%s %s" % (param, value) for (param, value) in
+                monitor_conf.get("options", {}).items()]) + " " +
+            "> {log} 2>&1 < /dev/null &".format(
+                log=monitor_conf.get("log", "perfRan")))
+    else:
+        ssh_client.exec("sudo nohup nice -n %s " %
+            monitor_conf.get("niceness", 19) +
+            "stdbuf -oL -eL " +
+            monitor_conf.get("command", monitor_name) + " " +
+            " ".join(["--%s %s" % (param, value) for (param, value) in
+                monitor_conf.get("options", {}).items()]) + " " +
+            "> {log} 2>&1 < /dev/null &".format(
+                log=monitor_conf.get("log", "/dev/null")))
 
 
 def start_containers():
