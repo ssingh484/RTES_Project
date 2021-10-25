@@ -183,6 +183,15 @@ def install_collectl(node_hostname, node_conf, ssh_client):
       "sudo apt-get update && "
       "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y collectl")
 
+@nodes_with_monitor("perf record")
+def install_perf(node_hostname, node_conf, ssh_client):
+  ssh_client.exec(
+      "sudo apt-get update &&"
+      "sudo apt-get install -y linux-tools-generic &&"
+      "sudo apt-get install -y linux-cloud-tools-generic &&"
+      "sudo apt-get install -y linux-tools-5.4.0-88-generic &&"
+      "sudo apt-get install -y linux-cloud-tools-5.4.0-88-generic")
+
 
 @nodes_with_monitor("radvisor")
 def install_radvisor(node_hostname, node_conf, ssh_client):
@@ -296,15 +305,17 @@ def stop_monitors(node_hostname, node_conf, ssh_client):
   for monitor_name, monitor_conf in node_conf["monitors"].items():
     ssh_client.exec("sudo pkill %s" %
         monitor_conf.get("command", monitor_name).split(' ')[0])
+    ssh_client.exec("ls -a %s" %
+        monitor_conf.get("dirpath", monitor_name))
 
 
 @nodes_with_monitor(".+")
 def fetch_monitoring_data(node_hostname, node_conf, ssh_client):
   for monitor_name, monitor_conf in node_conf["monitors"].items():
-    ssh_client.exec("tar -C {dirpath} -czf /tmp/{monitor_name}.tar.gz .".format(
-        monitor_name=monitor_name.replace(' ', '\ '), dirpath=monitor_conf["dirpath"]))
+    ssh_client.exec("sudo tar -C {dirpath} -czf /tmp/{monitor_name}.tar.gz .".format(
+        monitor_name=monitor_name.replace(' ', '_'), dirpath=monitor_conf["dirpath"]))
     ssh_client.copy("/tmp/{monitor_name}.tar.gz".format(
-        monitor_name=monitor_name.replace(' ', '\ ')),
+        monitor_name=monitor_name.replace(' ', '_')),
         os.path.join(DIRNAME, "logs", node_hostname))
 
 
@@ -333,6 +344,7 @@ def run():
   install_bpfcc()
   install_collectl()
   install_radvisor()
+  install_perf()
   pull_docker_images()
   copy_workload_configuration_file()
   render_configuration_templates()

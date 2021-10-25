@@ -31,7 +31,7 @@
         plot: ""
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -152,7 +152,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -217,7 +217,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -278,7 +278,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -343,7 +343,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -408,7 +408,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -473,7 +473,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -534,7 +534,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -599,7 +599,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
@@ -660,7 +660,7 @@
         buffer: "16MiB"
     perf record:
       dirpath: "/tmp/perf"
-      niceness: 19
+      niceness: 15
       options:
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
