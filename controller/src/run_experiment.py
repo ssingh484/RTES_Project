@@ -275,7 +275,7 @@ def start_monitors(node_hostname, node_conf, ssh_client):
   for monitor_name, monitor_conf in node_conf["monitors"].items():
     ssh_client.exec("mkdir -p %s" % monitor_conf["dirpath"])
     if "perf" in monitor_name:
-        ssh_client.exec("sudo touch perfRan && sudo nohup nice -n %s " %
+        ssh_client.exec("touch perfRan && sudo nohup nice -n %s " %
             monitor_conf.get("niceness", 19) +
             "stdbuf -oL -eL " +
             monitor_conf.get("command", monitor_name) + " " +
