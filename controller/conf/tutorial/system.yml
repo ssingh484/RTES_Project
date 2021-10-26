@@ -36,7 +36,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{apigateway_node}}:
   ssh:
     username: "{{username}}"
@@ -157,7 +157,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{account_service_node}}:
   ssh:
     username: "{{username}}"
@@ -222,7 +222,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{account_database_node}}:
   ssh:
     username: "{{username}}"
@@ -283,7 +283,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{follow_service_node}}:
   ssh:
     username: "{{username}}"
@@ -348,7 +348,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{like_service_node}}:
   ssh:
     username: "{{username}}"
@@ -413,7 +413,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{post_service_node}}:
   ssh:
     username: "{{username}}"
@@ -478,7 +478,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{post_database_node}}:
   ssh:
     username: "{{username}}"
@@ -539,7 +539,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{uniquepair_service_node}}:
   ssh:
     username: "{{username}}"
@@ -604,7 +604,7 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"
 {{uniquepair_database_node}}:
   ssh:
     username: "{{username}}"
@@ -665,4 +665,4 @@
         output=: "\b/tmp/perf/log.perf"
         all-cpus: ""
         freq=: "\bmax"
-        g: ""
+        g: "sleep 6000"

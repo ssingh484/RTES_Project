@@ -283,6 +283,14 @@ def start_monitors(node_hostname, node_conf, ssh_client):
                 monitor_conf.get("options", {}).items()]) + " " +
             "> {log} 2>&1 < /dev/null &".format(
                 log=monitor_conf.get("log", "perfRan")))
+        print("touch perfRan && sudo nohup nice -n %s " %
+            monitor_conf.get("niceness", 19) +
+            "stdbuf -oL -eL " +
+            monitor_conf.get("command", monitor_name) + " " +
+            " ".join(["--%s %s" % (param, value) for (param, value) in
+                monitor_conf.get("options", {}).items()]) + " " +
+            "> {log} 2>&1 < /dev/null &".format(
+                log=monitor_conf.get("log", "perfRan")))
     else:
         ssh_client.exec("sudo nohup nice -n %s " %
             monitor_conf.get("niceness", 19) +
