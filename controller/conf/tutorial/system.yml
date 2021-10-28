@@ -32,11 +32,6 @@
     perf record:
       dirpath: "/tmp/perf"
       niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
 {{apigateway_node}}:
   ssh:
     username: "{{username}}"
@@ -153,11 +148,6 @@
     perf record:
       dirpath: "/tmp/perf"
       niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
 {{account_service_node}}:
   ssh:
     username: "{{username}}"
@@ -215,14 +205,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15
 {{account_database_node}}:
   ssh:
     username: "{{username}}"
@@ -276,14 +261,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15
 {{follow_service_node}}:
   ssh:
     username: "{{username}}"
@@ -341,14 +321,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15
 {{like_service_node}}:
   ssh:
     username: "{{username}}"
@@ -406,14 +381,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15
 {{post_service_node}}:
   ssh:
     username: "{{username}}"
@@ -471,14 +441,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15
 {{post_database_node}}:
   ssh:
     username: "{{username}}"
@@ -532,14 +497,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15
 {{uniquepair_service_node}}:
   ssh:
     username: "{{username}}"
@@ -597,14 +557,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15
 {{uniquepair_database_node}}:
   ssh:
     username: "{{username}}"
@@ -658,11 +613,6 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    perf record:
-      dirpath: "/tmp/perf"
-      niceness: 15
-      options:
-        output=: "\b/tmp/perf/log.perf"
-        all-cpus: ""
-        freq=: "\bmax"
-        g: "-- sleep 6000"
+    # perf record:
+    #   dirpath: "/tmp/perf"
+    #   niceness: 15

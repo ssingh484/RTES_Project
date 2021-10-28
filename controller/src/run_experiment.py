@@ -8,6 +8,7 @@ import re
 import subprocess
 import threading
 import time
+import tarfile
 
 import jinja2
 import yaml
@@ -275,14 +276,7 @@ def start_monitors(node_hostname, node_conf, ssh_client):
   for monitor_name, monitor_conf in node_conf["monitors"].items():
     ssh_client.exec("mkdir -p %s" % monitor_conf["dirpath"])
     if "perf" in monitor_name:
-        ssh_client._client.exec_command("touch perfRan && sudo nohup nice -n %s " %
-            monitor_conf.get("niceness", 19) +
-            "stdbuf -oL -eL " +
-            monitor_conf.get("command", monitor_name) + " " +
-            " ".join(["--%s %s" % (param, value) for (param, value) in
-                monitor_conf.get("options", {}).items()]) + " " +
-            "> {log} 2>&1 < /dev/null &".format(
-                log=monitor_conf.get("log", "perfRan")))
+        ssh_client._client.exec_command("touch perfRan && sudo nohup nice -n 15 stdbuf -oL -eL perf record --output=/tmp/perf/log.perf --all-cpus  --freq=100 -g > perfRan 2>&1 < /dev/null &")
     else:
         ssh_client.exec("sudo nohup nice -n %s " %
             monitor_conf.get("niceness", 19) +
@@ -315,8 +309,9 @@ def stop_monitors(node_hostname, node_conf, ssh_client):
   for monitor_name, monitor_conf in node_conf["monitors"].items():
     ssh_client.exec("sudo pkill %s" %
         monitor_conf.get("command", monitor_name).split(' ')[0])
-    ssh_client.exec("ls -a %s" %
-        monitor_conf.get("dirpath", monitor_name))
+    if "perf" in monitor_name:
+        ssh_client.exec("cd /tmp/perf/;sudo perf script -i log.perf > %s.out" %
+            monitor_conf.get("command", monitor_name).split(' ')[0])
 
 
 @nodes_with_monitor(".+")
@@ -346,6 +341,23 @@ def fetch_container_logs(node_hostname, node_conf, ssh_client):
     ssh_client.copy("{dirpath}.tar.gz".format(dirpath=dirpath),
         os.path.join(DIRNAME, "logs", node_hostname))
 
+def compress(path, tar_name):
+    with tarfile.open(tar_name, "w:gz") as tar_handle:
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                tar_handle.add(os.path.join(root, file))
+
+@nodes_with_monitor("perf record")
+def compile_perf_data(node_hostname, node_conf, ssh_client):
+  for monitor_name, monitor_conf in node_conf["monitors"].items():
+      my_tar = tarfile.open("{}.tar.gz".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) ) )
+      my_tar.extractall("{}".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) ) )
+      my_tar.close()
+      os.remove("{}.tar.gz".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) ) )
+      # WORK HERE USING FLAMEGRAPH TOOLS - check this all works via touch below this
+      from pathlib import Path
+      Path("{}/TEST.txt".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) )).touch()
+      compress("{}".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) ), "{}.tar.gz".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) ) )
 
 def run():
   configure_kernel()
