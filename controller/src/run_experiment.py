@@ -310,6 +310,7 @@ def stop_monitors(node_hostname, node_conf, ssh_client):
     ssh_client.exec("sudo pkill %s" %
         monitor_conf.get("command", monitor_name).split(' ')[0])
     if "perf" in monitor_name:
+        time.sleep(3)
         ssh_client.exec("cd /tmp/perf/;sudo perf script -i log.perf > %s.out" %
             monitor_conf.get("command", monitor_name).split(' ')[0])
 
