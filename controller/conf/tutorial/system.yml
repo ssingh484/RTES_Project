@@ -8,7 +8,7 @@
     key_filename: "/home/{{username}}/.ssh/id_rsa"
   containers:
     loadgen:
-      image: "rodrigoalveslima/buzzblog:loadgen_v0.1"
+      image: "rodrigoalveslima/buzzblog:loadgen_v0.1_debug"
       start_order: 4
       logs:
         - "/var/log/loadgen.log"
@@ -69,7 +69,7 @@
         volume: "/etc/nginx:/etc/nginx"
         detach: ""
     apigateway1:
-      image: "rodrigoalveslima/buzzblog:apigateway_latest"
+      image: "rodrigoalveslima/buzzblog:apigateway_latest_debug"
       start_order: 3
       logs:
         - "/tmp/logger"
@@ -81,7 +81,7 @@
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
     apigateway2:
-      image: "rodrigoalveslima/buzzblog:apigateway_latest"
+      image: "rodrigoalveslima/buzzblog:apigateway_latest_debug"
       start_order: 3
       logs:
         - "/tmp/logger"
@@ -93,7 +93,7 @@
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
     apigateway3:
-      image: "rodrigoalveslima/buzzblog:apigateway_latest"
+      image: "rodrigoalveslima/buzzblog:apigateway_latest_debug"
       start_order: 3
       logs:
         - "/tmp/logger"
@@ -105,7 +105,7 @@
           - "/etc/opt/BuzzBlogApp:/etc/opt/BuzzBlogApp"
         detach: ""
     apigateway4:
-      image: "rodrigoalveslima/buzzblog:apigateway_latest"
+      image: "rodrigoalveslima/buzzblog:apigateway_latest_debug"
       start_order: 3
       logs:
         - "/tmp/logger"
@@ -160,7 +160,7 @@
     net.core.somaxconn: 128
   containers:
     account_service:
-      image: "rodrigoalveslima/buzzblog:account_latest"
+      image: "rodrigoalveslima/buzzblog:account_latest_debug"
       start_order: 2
       logs:
         - "/tmp/calls.log"
@@ -205,9 +205,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15
 {{account_database_node}}:
   ssh:
     username: "{{username}}"
@@ -261,9 +261,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15
 {{follow_service_node}}:
   ssh:
     username: "{{username}}"
@@ -276,7 +276,7 @@
     net.core.somaxconn: 128
   containers:
     follow_service:
-      image: "rodrigoalveslima/buzzblog:follow_latest"
+      image: "rodrigoalveslima/buzzblog:follow_latest_debug"
       start_order: 2
       logs:
         - "/tmp/calls.log"
@@ -321,9 +321,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15
 {{like_service_node}}:
   ssh:
     username: "{{username}}"
@@ -336,7 +336,7 @@
     net.core.somaxconn: 128
   containers:
     like_service:
-      image: "rodrigoalveslima/buzzblog:like_latest"
+      image: "rodrigoalveslima/buzzblog:like_latest_debug"
       start_order: 2
       logs:
         - "/tmp/calls.log"
@@ -381,9 +381,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15
 {{post_service_node}}:
   ssh:
     username: "{{username}}"
@@ -396,7 +396,7 @@
     net.core.somaxconn: 128
   containers:
     post_service:
-      image: "rodrigoalveslima/buzzblog:post_latest"
+      image: "rodrigoalveslima/buzzblog:post_latest_debug"
       start_order: 2
       logs:
         - "/tmp/calls.log"
@@ -441,9 +441,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15
 {{post_database_node}}:
   ssh:
     username: "{{username}}"
@@ -497,9 +497,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15
 {{uniquepair_service_node}}:
   ssh:
     username: "{{username}}"
@@ -512,7 +512,7 @@
     net.core.somaxconn: 128
   containers:
     uniquepair_service:
-      image: "rodrigoalveslima/buzzblog:uniquepair_latest"
+      image: "rodrigoalveslima/buzzblog:uniquepair_latest_debug"
       start_order: 2
       logs:
         - "/tmp/calls.log"
@@ -557,9 +557,9 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15
 {{uniquepair_database_node}}:
   ssh:
     username: "{{username}}"
@@ -613,6 +613,6 @@
         poll: "1s"
         interval: "50ms"
         buffer: "16MiB"
-    # perf record:
-    #   dirpath: "/tmp/perf"
-    #   niceness: 15
+    perf record:
+      dirpath: "/tmp/perf"
+      niceness: 15

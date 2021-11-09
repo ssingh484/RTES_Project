@@ -45,13 +45,13 @@ def compile_perf_data(node_hostname, node_conf):
           # WORK HERE USING FLAMEGRAPH TOOLS - check this all works via touch below this
           # partA = subprocess.call(["perl", "stackcollapse-perf.pl", "{input}/perf.out > {input}/perf.folded".format(input = os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') )) ], shell=True )
           partA = subprocess.call("perl stackcollapse-perf.pl {input}/perf.out > {input}/perf.folded".format(input = os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') )), shell=True )
-          print("PART 1 DONE\n\n")
+          print(f"PART 1 DONE for node {node_hostname}\n\n")
           if partA == 0:
-            subprocess.call("perl flamegraph.pl {input}/perf.folded > {input}/perf.svg".format(input = os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') )), shell=True )
+            subprocess.call("perl flamegraph.pl {input}/perf.folded > {input}/{host}.svg".format(input = os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ), host = node_hostname), shell=True )
           else:
             print(f"FAILED TO MAKE SVG ON {node_hostname}")
-          from pathlib import Path
-          Path("{}/TEST.txt".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) )).touch()
+          # from pathlib import Path
+          # Path("{}/TEST.txt".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) )).touch()
           # compress("{}".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) ), "{}.tar.gz".format(os.path.join(DIRNAME, "logs", node_hostname, monitor_name.replace(' ', '_') ) ) )
       else:
           pass
